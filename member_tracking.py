@@ -201,7 +201,7 @@ def main():
     merged =  merged.loc[merged['_merge'] !='both',].reset_index(drop=True)
     merged.rename(columns = {'_merge':'Note'}, inplace=True)
     merged["Note"] = np.where( merged["Note"] == "left_only", 'added', 'removed')
-    # save report
+    # save report to sage admin folder
     out_dir = tempfile.mkdtemp(dir=os.getcwd())
     membership_report(out_dir)
     #update member_table
