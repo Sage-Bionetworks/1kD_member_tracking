@@ -7,13 +7,11 @@ on:
   push:
     branches:
       - 'master'
-      - 'develop'
     tags:
-      - '*'
+      - 'v*'
   pull_request:
     branches:
       - 'master'
-      - 'develop'
 
 env:
   REGISTRY: ghcr.io
@@ -43,7 +41,7 @@ jobs:
         uses: docker/metadata-action@v4.1.1
         with:
           images: ${{ env.IMAGE_PATH }}
-          tags: type=ref,event=branch
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v3.2.0
         with:
