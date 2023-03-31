@@ -17,7 +17,7 @@ jobs:
   tagging:
     runs-on: ubuntu-22.04
     outputs:
-      tag: ${{ steps.get_tag.outputs.tag}}
+      tag: ${{steps.get_tag.outputs.tag}}
     steps:
     - uses: actions/checkout@v3
       with:
@@ -29,6 +29,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         WITH_V: true       
+        DEFAULT_BUMP: patch
+        INITIAL_VERSION: 1.0.0
   
   build-and-push-image:
     needs: tagging
