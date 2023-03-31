@@ -61,4 +61,4 @@ jobs:
           context: .
           push: true
           tags: ${{ needs.tagging.outputs.tag }}
-          labels: ${{ steps.meta.outputs.labels }}
+          labels: ${{ needs.tagging.outputs.tag }}
