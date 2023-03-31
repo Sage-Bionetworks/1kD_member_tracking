@@ -7,8 +7,6 @@ on:
   push:
     branches:
       - 'master'
-    tags:
-      - '*'
 env:
   REGISTRY: ghcr.io
   IMAGE_PATH: ghcr.io/${{ github.repository }}
