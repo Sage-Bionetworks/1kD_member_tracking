@@ -55,7 +55,7 @@ jobs:
         with:
           images: ${{ env.IMAGE_PATH }}
           tags: |
-            type=semver,pattern={{version}}
+            type=semver,pattern={{raw}}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v3.2.0
