@@ -4,13 +4,13 @@ Description: a script to generate data_request_tracking table, data request chan
              data structure tree and IDU wiki page for 1kD project
 Contributors: Dan Lu
 """
+# import modules
 import json
 import logging
 import os
 import pdb
 import tempfile
 import typing
-# import modules
 from datetime import datetime
 from doctest import testmod
 
@@ -174,36 +174,37 @@ def update_table(table_name: str, df: pd.DataFrame):
     table_out = syn.store(Table(tables[table_name], df), forceVersion = True)
     print_green(f"Done updating {table_name} table")
 
-def membership_report(out_dir):
+def membership_report(df: pd.DataFrame):
     """
     Function to update folder tree file
 
-    :param out_dir (str): the directory saves the temp folders created in get_folder_tree()
+    :param df (pd.DataFrame): the data frame to be saved
     """
     syn = Synapse().client()
     today = datetime.today()
     with open(f"1kD_membership_report_{today.year}_{today.month}.csv", "w") as file:
-        table_out = syn.store(
-            File(
-                f"1kD_membership_report_{today.year}_{today.month}.csv",
-                parent="syn35023796",
-            )
+        df.to_csv(file)
+    table_out = syn.store(
+        File(
+            f"1kD_membership_report_{today.year}_{today.month}.csv",
+            parent="syn35023796",
         )
-        os.remove(f"1kD_membership_report_{today.year}_{today.month}.csv")
+    )
+    os.remove(f"1kD_membership_report_{today.year}_{today.month}.csv")
 
 def main():
     members = get_team_member()
     member_table = load_members_table('syn35048407')
     member_table.drop(columns = ["first_name", "last_name"],inplace=True)
-    #pdb.set_trace()
     # merge new members table with existing table 
     merged = members.merge(member_table, on = ["submitter_id", "user_name", "team_name"], how = 'outer', indicator = True)
     merged =  merged.loc[merged['_merge'] !='both',].reset_index(drop=True)
     merged.rename(columns = {'_merge':'Note'}, inplace=True)
     merged["Note"] = np.where( merged["Note"] == "left_only", 'added', 'removed')
+    today = datetime.today()
+    merged["Month"] = f"{today.year}_{today.month}"
     # save report to sage admin folder
-    out_dir = tempfile.mkdtemp(dir=os.getcwd())
-    membership_report(out_dir)
+    membership_report(merged)
     #update member_table
     #update_table('1kD Team Members', members)
 
