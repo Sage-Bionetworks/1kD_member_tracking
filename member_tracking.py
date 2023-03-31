@@ -172,6 +172,9 @@ def update_table(table_name: str, df: pd.DataFrame):
     results = syn.tableQuery(f"select * from {tables[table_name]}")
     delete_out = syn.delete(results)
     table_out = syn.store(Table(tables[table_name], df), forceVersion = True)
+    # create snapshot
+    today = datetime.today()
+    syn.create_snapshot_version('syn35048407',label = f"updated in {today.year}.{today.month}")
     print_green(f"Done updating {table_name} table")
 
 def membership_report(df: pd.DataFrame):
