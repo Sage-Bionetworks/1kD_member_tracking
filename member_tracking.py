@@ -1,5 +1,5 @@
 """
-Name: data_request_tracking.py
+Name: member_tracking.py
 Description: a script to generate data_request_tracking table, data request change logs table,
              data structure tree and IDU wiki page for 1kD project
 Contributors: Dan Lu
