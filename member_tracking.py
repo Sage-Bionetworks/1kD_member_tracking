@@ -200,13 +200,13 @@ def main():
     merged = members.merge(member_table, on = ["submitter_id", "user_name", "team_name"], how = 'outer', indicator = True)
     merged =  merged.loc[merged['_merge'] !='both',].reset_index(drop=True)
     merged.rename(columns = {'_merge':'Note'}, inplace=True)
-    merged["Note"] = np.where( merged["Note"] == "left_only", 'added', 'removed')
     today = datetime.today()
     merged["Month"] = f"{today.year}_{today.month}"
+    merged["Note"] = np.where( merged["Note"] == "left_only", 'added', 'removed')
     # save report to sage admin folder
     membership_report(merged)
     #update member_table
-    #update_table('1kD Team Members', members)
+    update_table('1kD Team Members', members)
 
 if __name__ == "__main__":
     main()
