@@ -16,18 +16,22 @@ env:
 jobs:
   tagging:
     runs-on: ubuntu-22.04
+    outputs:
+      tag: ${{ steps.get_tag.outputs.tag}}
     steps:
     - uses: actions/checkout@v3
       with:
         fetch-depth: '0'
 
     - name: Bump version and push tag
+      id: get_tag
       uses: anothrNick/github-tag-action@1.55.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         WITH_V: true       
   
   build-and-push-image:
+    needs: tagging
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -57,4 +61,4 @@ jobs:
           context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          labels: ${{ needs.tagging.outputs.tag }}
