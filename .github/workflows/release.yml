@@ -54,11 +54,13 @@ jobs:
         uses: docker/metadata-action@v4.1.1
         with:
           images: ${{ env.IMAGE_PATH }}
+          tags: |
+            type=semver,pattern={{version}}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v3.2.0
         with:
           context: .
           push: true
-          tags: ${{ needs.tagging.outputs.tag }}
-          labels: ${{ needs.tagging.outputs.tag }}
+          tags: ${{ steps.meta.outputs.tags}}
+          labels: ${{ steps.meta.outputs.labels }}
