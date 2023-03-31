@@ -12,22 +12,19 @@ env:
   IMAGE_PATH: ghcr.io/${{ github.repository }}
 
 jobs:
-  release:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      issues: write
-      pull-requests: write
+  tagging:
+    runs-on: ubuntu-22.04
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Install dependencies
-        run: pip install semantic-release
-      - name: Release
-        run: npx semantic-release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: '0'
+
+    - name: Bump version and push tag
+      uses: anothrNick/github-tag-action@1.55.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        WITH_V: true       
+  
   build-and-push-image:
     runs-on: ubuntu-latest
     permissions:
